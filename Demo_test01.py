@@ -28,6 +28,7 @@ class code_un():
             try:
                 if d_packet[i]['Raw'].load.startswith('GET') or d_packet[i]['Raw'].load.startswith('POST'):
                     print d_packet[i]['IP'].src,'==>',d_packet[i]['IP'].dst,re.findall(regx,d_packet[i]['Raw'].load)[0]
+                    print d_packet[i]['Raw'].load
                 else:
                     pass
             except:
