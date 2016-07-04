@@ -4,7 +4,9 @@
 #info:information fifter rules
 
 import re,os,sys
-
+global tts,rurl
+rurl=[]
+tts=[]
 class regx_raw():
     def regx_host(self,raw_vlue):
         re_host=r'Host: .*\r\n'
@@ -14,14 +16,33 @@ class regx_raw():
         except:
             pass
     def regx_url(self,raw_vlue):
-        regx=r'[A-Z]{3,4}.*?\ HTTP'
-        try:
-            #if re.findall(regx,raw_vlue).
-            pass
-        except:
-            pass
+        '''this is extract url'''
+        regx=r'[A-Z]{3,4}\ .*?HTTP\/1.1'
+        return re.findall(regx,raw_vlue)[0].split()[1]
     def regx_sql(self,raw_vlue):
-        regx_sql_url=r'[A-Z]["GET","POST"].*\?.* HTTP\/1.1'
-        #regx=r'[A-Z]{3,4}.*?\ HTTP'
-        return re.findall(regx_sql_url,raw_vlue)[0].split()[1]
-
+        '''this is extract /? url, using sqlmapapi'''
+        regx_sqlapi_url=r'[A-Z]{3,4}\ .*\?.*?HTTP\/1.1'
+        tts.append(re.findall(regx_sqlapi_url,raw_vlue)[0].split()[1])
+        return re.findall(regx_sqlapi_url,raw_vlue)[0].split()[1]+' '+re.findall(regx_sqlapi_url,raw_vlue)[0].split()[0]
+    def sql_inject(self,vlue_sql):
+        regx_sql_url=r'(?i)(and|select|union)\W.*(?i)(select|char|union)'
+        regx_sql_url_one=r'(?i)sleep\('
+        regx_sql_url_two=r'(?i)ord\(mid'
+        if re.findall(regx_sql_url,vlue_sql):
+            return 100
+        elif re.findall(regx_sql_url_one,vlue_sql):
+            return 100
+        elif re.findall(regx_sql_url_two,vlue_sql):
+            return 100
+        else:
+            pass
+    def xss_attack(self,xss):
+        self.xss=xss
+        regx_xss=r'(?i)alert\('
+        if re.findall(regx_xss,xss):
+            return 200
+    def attack_url(self,url):
+        if self.xss_attack(url)==200:
+            print 'xss警告'
+        elif self.sql_inject(url)==100:
+            print '注入警告',self.xss
