@@ -39,6 +39,7 @@ import gc
 while True:
     time.sleep(1)
     try:
+        #需要添加计数器，为方便插入id数值
         if a.num_list('/var/log/3moon/')==None:
             del filelist[:]
         else:
