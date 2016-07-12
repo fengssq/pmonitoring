@@ -1,7 +1,7 @@
 #coding:utf8
 #time:'上午10:46:16-7-4:2016'
 #author:Gru_GHT
-#info:information fifter rules
+#info: web information fifter rules
 
 import re,os,sys
 global tts,rurl
@@ -25,10 +25,12 @@ class regx_raw():
         tts.append(re.findall(regx_sqlapi_url,raw_vlue)[0].split()[1])
         return re.findall(regx_sqlapi_url,raw_vlue)[0].split()[1]+' '+re.findall(regx_sqlapi_url,raw_vlue)[0].split()[0]
     def sql_inject(self,vlue_sql):
+        self.value_sql_url=self.regx_url(vlue_sql)
+
         regx_sql_url=r'(?i)(and|select|union)\W.*(?i)(select|char|union)'
         regx_sql_url_one=r'(?i)sleep\('
         regx_sql_url_two=r'(?i)ord\(mid'
-        if re.findall(regx_sql_url,vlue_sql):
+        if re.findall(regx_sql_url,self.value_sql_url):
             return 100
         elif re.findall(regx_sql_url_one,vlue_sql):
             return 100
@@ -43,6 +45,8 @@ class regx_raw():
             return 200
     def attack_url(self,url):
         if self.xss_attack(url)==200:
-            print 'xss警告'
+            print '200',self.xss
         elif self.sql_inject(url)==100:
-            print '注入警告',self.xss
+            return '100',self.value_sql_url
+        else:
+            return '3',self.regx_url(url)
