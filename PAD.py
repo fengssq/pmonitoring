@@ -61,7 +61,8 @@ dd=rawurltt()
 import gc
 if __name__=='__main__':
 
-    print '请检查ela分布式是否开启，检查sqlmap是否启动服务。完毕后请刷新验证再次启动'
+    print '请检查ela分布式是否开启，检查sqlmap是否启动服务。完毕后请刷新验证再次启动' \
+          '启动完毕后，请先执行db目录中的createdb.py，再次执行PAD！'
     if raw_input('请确认：\n')=='y':
         print '开启轻量安全分析插件'
         print '本次分析基准：安全信息仅展示，存在攻击或异常将保存至服务器！'
